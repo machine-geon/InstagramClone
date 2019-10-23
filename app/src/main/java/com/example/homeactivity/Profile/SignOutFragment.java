@@ -36,11 +36,11 @@ public class SignOutFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signout, container, false);
         tvSignout = (TextView) view.findViewById(R.id.tvConfirmSignout);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        tvSigningOut = (TextView) view.findViewById(R.id.btnConfirmSignout);
+        tvSigningOut = (TextView) view.findViewById(R.id.tvSigningOut);
         Button btnConfirmSignout = (Button) view.findViewById(R.id.btnConfirmSignout);
 
         mProgressBar.setVisibility(View.GONE);
-        tvSignout.setVisibility(View.GONE);
+        tvSigningOut.setVisibility(View.GONE);
 
         setupFirebaseAuth();
 
@@ -49,7 +49,7 @@ public class SignOutFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to sign out.");
                 mProgressBar.setVisibility(View.VISIBLE);
-                tvSignout.setVisibility(View.VISIBLE);
+                tvSigningOut.setVisibility(View.VISIBLE);
 
                 mAuth.signOut();
                 getActivity().finish();
