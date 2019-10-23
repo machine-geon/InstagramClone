@@ -1,6 +1,7 @@
 package com.example.homeactivity.Login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.homeactivity.Home.HomeActivity;
 import com.example.homeactivity.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -115,7 +117,24 @@ public class LoginActivity extends AppCompatActivity {
              }
          });
 
-         
+         TextView linkSingUp = (TextView) findViewById(R.id.link_signup);
+         linkSingUp.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Log.d(TAG, "onClick: navigating to register screen");
+                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                 startActivity(intent);
+             }
+         });
+
+         /*
+         If the user is logged in then navigate to HomeActivity and call 'finish()'
+          */
+         if(mAuth.getCurrentUser() != null){
+             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+             startActivity(intent);
+             finish();
+         }
 
      }
 
