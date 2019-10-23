@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         initImageLoader();
         setupBotttomNavigationView();
         setupViewPager();
+
     }
 
     private void initImageLoader(){
