@@ -21,6 +21,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.BottomNavigationViewHelper;
+import com.example.homeactivity.Utils.FirebaseMethods;
+import com.example.homeactivity.Utils.UniversalImageLoader;
+import com.example.homeactivity.models.User;
+import com.example.homeactivity.models.UserAccountSettings;
+import com.example.homeactivity.models.UserSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +52,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
 
 
     private TextView mPosts, mFollowers, mFollwing, mDisplayName, mUsername, mWebsite, mDescription;
@@ -77,14 +83,35 @@ public class ProfileFragment extends Fragment {
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mContext = getActivity();
+        mFirebaseMethods = new FirebaseMethods(getActivity());
         Log.d(TAG, "onCreateView: started.");
 
         setupBotttomNavigationView();
         setupToolbar();
 
+        setupFirebaseAuth();
+
         return view;
     }
 
+    private void setProfileWidgets(UserSettings userSettings){
+        //Log.d(TAG, "setProfileWidgets: setting widgets with data retrieving from firebase database: " + userSettings.toString());
+
+        User user = userSettings.getUser();
+        UserAccountSettings settings = userSettings.getSettings();
+
+        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+
+        mDisplayName.setText(settings.getDisplay_name());
+        mUsername.setText(settings.getUsername());
+        mWebsite.setText(settings.getWebsite());
+        mDescription.setText(settings.getDescription());
+        mPosts.setText(String.valueOf(settings.getPosts()));
+        mFollowers.setText(String.valueOf(settings.getFollowers()));
+        mFollwing.setText(String.valueOf(settings.getFollowing()));
+
+    }
+    
     // Responsible for setting up the profile toolbar
     private void setupToolbar() {
 
@@ -147,6 +174,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
+                setProfileWidgets(mFirebaseMethods.getUserSettings(dataSnapshot));
 
                 //retrieve images for user in question
             }
