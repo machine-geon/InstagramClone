@@ -91,6 +91,16 @@ public class ProfileFragment extends Fragment {
 
         setupFirebaseAuth();
 
+        TextView editProfile = (TextView) view.findViewById(R.id.textEditProfile);
+        editProfile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to" + mContext.getString(R.string.edit_profile_fragment));
+                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -110,7 +120,7 @@ public class ProfileFragment extends Fragment {
         mPosts.setText(String.valueOf(settings.getPosts()));
         mFollowers.setText(String.valueOf(settings.getFollowers()));
         mFollwing.setText(String.valueOf(settings.getFollowing()));
-
+        mProgressBar.setVisibility(View.GONE);
     }
     
     // Responsible for setting up the profile toolbar
