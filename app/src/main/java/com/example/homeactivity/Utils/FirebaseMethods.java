@@ -221,8 +221,9 @@ public class FirebaseMethods {
                 }
             }
             // user node
+            Log.d(TAG, "getUserSettings: snapshot key: " + ds.getKey());
             if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
-                Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
+                Log.d(TAG, "getUserAccountSettings: users node datasnapshot: " + ds);
 
                 user.setUsername(
                         ds.child(userID)
