@@ -76,7 +76,7 @@ public class ProfileFragment extends Fragment {
         mProfilePhoto = (CircleImageView) view.findViewById(R.id.profile_photo);
         mPosts = (TextView) view.findViewById(R.id.tvPosts);
         mFollowers = (TextView) view.findViewById(R.id.tvFollowers);
-        mFollwing = (TextView) view.findViewById(R.id.tvFollowers);
+        mFollwing = (TextView) view.findViewById(R.id.tvFollowing);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
@@ -95,7 +95,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setProfileWidgets(UserSettings userSettings){
-        //Log.d(TAG, "setProfileWidgets: setting widgets with data retrieving from firebase database: " + userSettings.toString());
+        Log.d(TAG, "setProfileWidgets: setting widgets with data retrieving from firebase database: " + userSettings.toString());
+        Log.d(TAG, "setProfileWidgets: setting widgets with data retrieving from firebase database: " + userSettings.getSettings().getUsername());
 
         User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
