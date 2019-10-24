@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.homeactivity.R;
 import com.example.homeactivity.models.User;
 import com.example.homeactivity.models.UserAccountSettings;
+import com.example.homeactivity.models.UserSettings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -48,7 +49,7 @@ public class FirebaseMethods {
 
         User user = new User();
 
-        for (DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
+        for (DataSnapshot ds : dataSnapshot.child(userID).getChildren()) {
             Log.d(TAG, "checkIfUsernameExists: datasnapshot:" + ds);
 
             user.setUsername(ds.getValue(User.class).getUsername());
@@ -61,14 +62,16 @@ public class FirebaseMethods {
         }
         return false;
     }
-        /**
-         * Register a new email and password to Firebase Authentication
-         * @param email
-         * @param password
-         * @param username
-         */
 
-    public void registerNewEmail ( final String email, String password ,final String username){
+    /**
+     * Register a new email and password to Firebase Authentication
+     *
+     * @param email
+     * @param password
+     * @param username
+     */
+
+    public void registerNewEmail(final String email, String password, final String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
@@ -82,8 +85,7 @@ public class FirebaseMethods {
                         if (!task.isSuccessful()) {
                             Toast.makeText(mContext, R.string.auth_failed,
                                     Toast.LENGTH_LONG).show();
-                        }
-                        else if (task.isSuccessful()) {
+                        } else if (task.isSuccessful()) {
                             //send verification email
                             sendVerificationEmail();
 
@@ -95,17 +97,17 @@ public class FirebaseMethods {
                 });
     }
 
-    private void sendVerificationEmail(){
+    private void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user != null){
+        if (user != null) {
             user.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
-                            }else if (task.isSuccessful()){
+                            } else if (task.isSuccessful()) {
                                 // send verification email
                                 sendVerificationEmail();
                                 Toast.makeText(mContext, "couldn't send verification email.", Toast.LENGTH_SHORT).show();
@@ -119,13 +121,14 @@ public class FirebaseMethods {
     /**
      * Add information to the users nodes
      * Add information to the user_account_settings node
+     *
      * @param email
      * @param username
      * @param description
      * @param website
      * @param profile_photo
      */
-    public void addNewUser (String email, String username, String description, String website, String profile_photo){
+    public void addNewUser(String email, String username, String description, String website, String profile_photo) {
 
         User user = new User(userID, 1, email, StringManipulation.condenseUsername(username));
 
@@ -140,13 +143,108 @@ public class FirebaseMethods {
                 0,
                 0,
                 profile_photo,
-                username,
+                StringManipulation.condenseUsername(username),
                 website
         );
 
         myRef.child(mContext.getString(R.string.dbname_user_account_settings))
                 .child(userID)
                 .setValue(settings);
+    }
+
+    /**
+     * Retrieves the account settings for the user currently logged in
+     * Database : user_accout_Settings node
+     *
+     * @param dataSnapshot
+     * @return
+     */
+    private UserSettings getUserAccountSettings(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "getUserAccountSettings: retrieving user account settings from firebase");
+
+        UserAccountSettings settings = new UserAccountSettings();
+        User user = new User();
+
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+            // user_account_settings node
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
+                Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
+
+                try {
+
+                    settings.setDisplay_name(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getDisplay_name()
+                    );
+                    settings.setUsername(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getUsername()
+                    );
+                    settings.setWebsite(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getWebsite()
+                    );
+                    settings.setDescription(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getDescription()
+                    );
+                    settings.setPosts(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getPosts()
+                    );
+                    settings.setFollowing(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getFollowing()
+                    );
+                    settings.setFollowers(
+                            ds.child(userID)
+                                    .getValue(UserAccountSettings.class)
+                                    .getFollowers()
+                    );
+
+                    Log.d(TAG, "getUserAccountSettings: retrieved user_account_settings information: " + settings.toString());
+
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage());
+                }
+
+                // user node
+                if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
+                    Log.d(TAG, "getUserAccountSettings: datasnapshot: " + ds);
+
+                    user.setUsername(
+                            ds.child(userID)
+                                    .getValue(User.class)
+                                    .getUsername()
+                    );
+                    user.setEmail(
+                            ds.child(userID)
+                                    .getValue(User.class)
+                                    .getEmail()
+                    );
+                    user.setPhone_number(
+                            ds.child(userID)
+                                    .getValue(User.class)
+                                    .getPhone_number()
+                    );
+                    user.setUser_id(
+                            ds.child(userID)
+                                    .getValue(User.class)
+                                    .getUser_id()
+                    );
+
+                    Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
+                }
+            }
+        }
+        return new UserSettings(user, settings);
     }
 }
 
