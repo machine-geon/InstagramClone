@@ -43,21 +43,7 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
         }
     }
-    
-    public void updateUsername(String username){
-        Log.d(TAG, "updateUsername: updating username to: " + username);
 
-        myRef.child(mContext.getString(R.string.dbname_users))
-                .child(userID)
-                .child(mContext.getString(R.string.field_username))
-                .setValue(username);
-
-        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
-                .child(userID)
-                .child(mContext.getString(R.string.field_username))
-                .setValue(username);
-    }
-/**
     public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
         Log.d(TAG, "checkIfUsernameExists: checking if" + username + "alreadt exists.");
 
@@ -76,7 +62,7 @@ public class FirebaseMethods {
         }
         return false;
     }
-*/
+
     /**
      * Register a new email and password to Firebase Authentication
      *
