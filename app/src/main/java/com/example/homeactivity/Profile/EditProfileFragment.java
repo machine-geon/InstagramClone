@@ -168,7 +168,7 @@ public class EditProfileFragment extends Fragment implements
         final String website = mWebsite.getText().toString();
         final String description = mDescription.getText().toString();
         final String email = mEmail.getText().toString();
-        final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
+        final String phoneNumber = mPhoneNumber.getText().toString();
 
         //case1: if the user made a change to their username
         if (!mUserSettings.getUser().getUsername().equals(username)) {
@@ -188,6 +188,29 @@ public class EditProfileFragment extends Fragment implements
             //          -'fetchProvidersForEmail(String email)'
             // step3) change the email
             //          - submit the new email to the database and authentication
+        }
+
+        /**
+         * change the rest of the settings that do not require uniqueness.
+         */
+        if(!mUserSettings.getSettings().getDisplay_name().equals(displayName)){
+            //update displayname
+            mFirebaseMethods.updateuserAccountSettings(displayName,null,null,null);
+        }
+        if(!mUserSettings.getSettings().getWebsite().equals(website)){
+            //update website
+            mFirebaseMethods.updateuserAccountSettings(null,website,null,null);
+
+        }
+        if(!mUserSettings.getSettings().getDescription().equals(description)){
+            //update description
+            mFirebaseMethods.updateuserAccountSettings(null,null,description,null);
+
+        }
+        if(!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)){
+            //update phoneNumber
+            mFirebaseMethods.updateuserAccountSettings(null,null,null,phoneNumber);
+
         }
 
     }

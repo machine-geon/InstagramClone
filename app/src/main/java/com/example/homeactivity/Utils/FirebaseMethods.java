@@ -45,7 +45,47 @@ public class FirebaseMethods {
     }
 
     /**
+     * Update 'user_account_settings' node for the current user
+     *
+     * @param displayName
+     * @param website
+     * @param description
+     * @param phoneNumber
+     */
+    public void updateuserAccountSettings(String displayName, String website, String description, String phoneNumber) {
+
+        Log.d(TAG, "updateuserAccountSettings: updating user account settings");
+
+        if (displayName != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_display_name))
+                    .setValue(displayName);
+        }
+
+        if (website != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_website))
+                    .setValue(website);
+        }
+        if (description != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_description))
+                    .setValue(description);
+        }
+        if (phoneNumber != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_phone_number))
+                    .setValue(phoneNumber);
+        }
+    }
+
+    /**
      * update username in the 'users' node and 'user_account_settings' node
+     *
      * @param username
      */
     public void updateUsername(String username) {
@@ -64,6 +104,7 @@ public class FirebaseMethods {
 
     /**
      * update the email in the 'users' node
+     *
      * @param email
      */
     public void updateEmail(String email) {
@@ -161,7 +202,7 @@ public class FirebaseMethods {
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo) {
 
-        User user = new User(userID,"" , email, StringManipulation.condenseUsername(username));
+        User user = new User(userID, "", email, StringManipulation.condenseUsername(username));
 
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)
