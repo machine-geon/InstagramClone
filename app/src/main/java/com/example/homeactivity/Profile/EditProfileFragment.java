@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.FirebaseMethods;
 import com.example.homeactivity.Utils.UniversalImageLoader;
+import com.example.homeactivity.dialogs.ConfirmPasswordDialog;
 import com.example.homeactivity.models.User;
 import com.example.homeactivity.models.UserAccountSettings;
 import com.example.homeactivity.models.UserSettings;
@@ -103,31 +104,29 @@ public class EditProfileFragment extends Fragment {
         final String email = mEmail.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        //case1: if the user made a change to their username
+        if (!mUserSettings.getUser().getUsername().equals(username)) {
 
-                //case1: if the user made a change to their username
-                if (!mUserSettings.getUser().getUsername().equals(username)) {
+            checkIfUsernameExists(username);
+        }
+        //case2: if the user made a change to their email
+        else {
+            // step1) Reauthenticate
+            //          - Confirm the password and email
+            ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
+            dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
 
-                    checkIfUsernameExists(username);
-                }
-                //case2: if the user made a change to their email
-                else {
+            // step2) check if the email already is registerd
+            //          -'fetchProvidersForEmail(String email)'
+            // step3) change the email
+            //          - submit the new email to the database and authentication
+        }
 
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     /**
      * Check is @param username already exists in the database
+     *
      * @param username
      */
     private void checkIfUsernameExists(final String username) {
@@ -143,13 +142,13 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(!dataSnapshot.exists()){
+                if (!dataSnapshot.exists()) {
                     //add the username
                     mFirebaseMethods.updateUsername(username);
                     Toast.makeText(getActivity(), "saved username", Toast.LENGTH_SHORT).show();
                 }
-                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
-                    if(singleSnapshot.exists()){
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    if (singleSnapshot.exists()) {
                         Log.d(TAG, "onDataChange: checkIfUsernameExists: FOUND A MATCH: " + singleSnapshot.getValue(User.class).getUsername());
                         Toast.makeText(getActivity(), "That username already exists.", Toast.LENGTH_SHORT).show();
                     }

@@ -144,7 +144,7 @@ public class FirebaseMethods {
      */
     public void addNewUser(String email, String username, String description, String website, String profile_photo) {
 
-        User user = new User(userID, 1, email, StringManipulation.condenseUsername(username));
+        User user = new User(userID,"" , email, StringManipulation.condenseUsername(username));
 
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)
@@ -233,38 +233,38 @@ public class FirebaseMethods {
                 } catch (NullPointerException e) {
                     Log.e(TAG, "getUserAccountSettings: NullPointerException: " + e.getMessage());
                 }
+            }
+            // users node
+            Log.d(TAG, "getUserSettings: snapshot key: " + ds.getKey());
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
+                Log.d(TAG, "getUserAccountSettings: users node datasnapshot: " + ds);
 
-                // users node
-                Log.d(TAG, "getUserSettings: snapshot key: " + ds.getKey());
-                if (ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
-                    Log.d(TAG, "getUserAccountSettings: users node datasnapshot: " + ds);
 
+                user.setEmail(
+                        ds.child(userID)
+                                .getValue(User.class)
+                                .getEmail()
+                );
+                user.setPhone_number(
+                        ds.child(userID)
+                                .getValue(User.class)
+                                .getPhone_number()
+                );
+                user.setUser_id(
+                        ds.child(userID)
+                                .getValue(User.class)
+                                .getUser_id()
+                );
+                user.setUsername(
+                        ds.child(userID)
+                                .getValue(User.class)
+                                .getUsername()
+                );
 
-                    user.setEmail(
-                            ds.child(userID)
-                                    .getValue(User.class)
-                                    .getEmail()
-                    );
-                    user.setPhone_number(
-                            ds.child(userID)
-                                    .getValue(User.class)
-                                    .getPhone_number()
-                    );
-                    user.setUser_id(
-                            ds.child(userID)
-                                    .getValue(User.class)
-                                    .getUser_id()
-                    );
-                    user.setUsername(
-                            ds.child(userID)
-                                    .getValue(User.class)
-                                    .getUsername()
-                    );
-
-                    Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
-                }
+                Log.d(TAG, "getUserAccountSettings: retrieved users information: " + user.toString());
             }
         }
+
         return new UserSettings(user, settings);
 
     }

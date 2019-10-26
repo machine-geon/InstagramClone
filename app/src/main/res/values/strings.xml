@@ -6,6 +6,9 @@
     <string name="sign_out_fragment">Sign Out</string>
     <string name="profile_fragment">Profile</string>
 
+    <!-- fragment names -->
+    <string name="confirm_password_dialog">CofirmPasswordDialog</string>
+
     <!-- Firebase messages -->
     <string name="auth_failed">Failed to Authenticate</string>
     <string name="auth_success">Authentication Success</string>
