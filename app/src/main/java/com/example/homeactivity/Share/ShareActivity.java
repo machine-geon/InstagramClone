@@ -10,10 +10,13 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.BottomNavigationViewHelper;
 import com.example.homeactivity.Utils.Permissions;
+import com.example.homeactivity.Utils.SectionPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class ShareActivity extends AppCompatActivity {
@@ -23,23 +26,43 @@ public class ShareActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 2 ;
     private static final int VERIFY_PERMISSIONS_REQUEST = 1;
 
+    private ViewPager mViewPager;
+
     private Context mContext =ShareActivity.this ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_share);
         Log.d(TAG, "onCreate: starting.");
 
         if (checkPermissionArray(Permissions.PERMISSIONS)){
-
+            setupViewPager();
         }else{
             verifyPermissions(Permissions.PERMISSIONS);
         }
-
-        //setupBotttomNavigationView();
     }
 
+       private void setupViewPager(){
+        SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new GalleryFragment());
+        adapter.addFragment(new PhotoFragment());
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsBottom);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
+        tabLayout.getTabAt(1).setText(R.string.photo);
+
+    }
+
+    /**
+     * verifiy all the permissions passed to the array
+     * @param permissions
+     */
     public void verifyPermissions(String[] permissions){
         Log.d(TAG, "verifyPermissions: verifyPermissions: verifying permissions.");
 
