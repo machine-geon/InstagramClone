@@ -20,15 +20,15 @@ import com.google.android.material.tabs.TabLayout;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class ShareActivity extends AppCompatActivity {
-    private static final String TAG = "ShareActivity" ;
+    private static final String TAG = "ShareActivity";
 
     //constants
-    private static final int ACTIVITY_NUM = 2 ;
+    private static final int ACTIVITY_NUM = 2;
     private static final int VERIFY_PERMISSIONS_REQUEST = 1;
 
     private ViewPager mViewPager;
 
-    private Context mContext =ShareActivity.this ;
+    private Context mContext = ShareActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,14 +36,28 @@ public class ShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_share);
         Log.d(TAG, "onCreate: starting.");
 
-        if (checkPermissionArray(Permissions.PERMISSIONS)){
+        if (checkPermissionArray(Permissions.PERMISSIONS)) {
             setupViewPager();
-        }else{
+        } else {
             verifyPermissions(Permissions.PERMISSIONS);
         }
     }
 
-       private void setupViewPager(){
+    /**
+     * return the current tab number
+     * 0 = GalleryFragment
+     * 1 = PhotoFragment
+     *
+     * @return
+     */
+    public int getCurrentTabNumver() {
+        return mViewPager.getCurrentItem();
+    }
+
+    /**
+     * setup viewpager for manager the tabs
+     */
+    private void setupViewPager() {
         SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GalleryFragment());
         adapter.addFragment(new PhotoFragment());
@@ -61,9 +75,10 @@ public class ShareActivity extends AppCompatActivity {
 
     /**
      * verifiy all the permissions passed to the array
+     *
      * @param permissions
      */
-    public void verifyPermissions(String[] permissions){
+    public void verifyPermissions(String[] permissions) {
         Log.d(TAG, "verifyPermissions: verifyPermissions: verifying permissions.");
 
         ActivityCompat.requestPermissions(
@@ -75,15 +90,16 @@ public class ShareActivity extends AppCompatActivity {
 
     /**
      * Check an array of permissions
+     *
      * @param permissions
      * @return
      */
-    public boolean checkPermissionArray(String[] permissions){
+    public boolean checkPermissionArray(String[] permissions) {
         Log.d(TAG, "checkPermissionArray: checking permissions array");
 
-        for(int i =0; i< permissions.length; i++){
+        for (int i = 0; i < permissions.length; i++) {
             String check = permissions[i];
-            if(!checkPermissions(check)){
+            if (!checkPermissions(check)) {
                 return false;
             }
         }
@@ -92,18 +108,19 @@ public class ShareActivity extends AppCompatActivity {
 
     /**
      * Check a single permission is it has been verified
+     *
      * @param permission
      * @return
      */
-    public  boolean checkPermissions(String permission){
-        Log.d(TAG, "checkPermissions: checking permission: "+ permission);
+    public boolean checkPermissions(String permission) {
+        Log.d(TAG, "checkPermissions: checking permission: " + permission);
 
         int permissionRequest = ActivityCompat.checkSelfPermission(ShareActivity.this, permission);
-        
-        if(permissionRequest != PackageManager.PERMISSION_GRANTED){
+
+        if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkPermissions: \n Permission was not granted for: " + permission);
             return false;
-        }else {
+        } else {
             Log.d(TAG, "checkPermissions: \n Permission was granted for: " + permission);
             return true;
         }
@@ -112,13 +129,13 @@ public class ShareActivity extends AppCompatActivity {
     /**
      * BottomNavigationView setup
      */
-    private void setupBotttomNavigationView(){
-        Log.d(TAG, "setupBotttomNavigationView: setting up BottomNavigationView") ;
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar) ;
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx) ;
-        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx) ;
-        Menu menu = bottomNavigationViewEx.getMenu() ;
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM) ;
-        menuItem.setChecked(true) ;
+    private void setupBotttomNavigationView() {
+        Log.d(TAG, "setupBotttomNavigationView: setting up BottomNavigationView");
+        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
+        Menu menu = bottomNavigationViewEx.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+        menuItem.setChecked(true);
     }
 }
