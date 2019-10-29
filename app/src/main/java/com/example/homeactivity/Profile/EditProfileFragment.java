@@ -1,5 +1,6 @@
 package com.example.homeactivity.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.homeactivity.R;
+import com.example.homeactivity.Share.ShareActivity;
 import com.example.homeactivity.Utils.FirebaseMethods;
 import com.example.homeactivity.Utils.UniversalImageLoader;
 import com.example.homeactivity.dialogs.ConfirmPasswordDialog;
@@ -150,7 +152,7 @@ public class EditProfileFragment extends Fragment implements
         checkmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: attempting to save change.");
+                Log.d(TAG, "onClick: attempting to save changes.");
                 saveProfileSettings();
             }
         });
@@ -269,6 +271,15 @@ public class EditProfileFragment extends Fragment implements
         mEmail.setText(userSettings.getUser().getEmail());
         mPhoneNumber.setText(String.valueOf(userSettings.getUser().getPhone_number()));
 
+        mChangeProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: changing profile photo.");
+                Intent intent = new Intent(getActivity(), ShareActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //268435456
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
       /*

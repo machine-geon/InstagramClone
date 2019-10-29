@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.homeactivity.Profile.AccountSettingsActivity;
 import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.FilePaths;
 import com.example.homeactivity.Utils.FileSearch;
@@ -32,10 +33,10 @@ import java.util.ArrayList;
 
 
 public class GalleryFragment extends Fragment {
-    private static final String TAG = "GalleryFragment" ;
+    private static final String TAG = "GalleryFragment";
 
     //constants
-    private static final int NUM_GRID_COLUMNS = 3 ;
+    private static final int NUM_GRID_COLUMNS = 3;
 
     //widgets
     private GridView gridView;
@@ -68,34 +69,48 @@ public class GalleryFragment extends Fragment {
                 getActivity().finish();
             }
         });
- 
+
         TextView nextScreen = (TextView) view.findViewById(R.id.tvNext);
         nextScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to the final share screen.");
-
-                Intent intent = new Intent(getActivity(), NextActivity.class);
-                intent.putExtra(getString(R.string.selected_image), mSelectedImage);
-                startActivity(intent);
+                if (isRootTask()) {
+                    Intent intent = new Intent(getActivity(), NextActivity.class);
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
+                    intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
+                    startActivity(intent);
+                }
             }
         });
 
         init();
 
-        return  view ;
+        return view;
     }
 
-    private void init(){
+    private boolean isRootTask() {
+        if (((ShareActivity) getActivity()).getTask() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void init() {
 
         FilePaths filePaths = new FilePaths();
 
         //check for other folders indide "/sotrage/emulated/0/pictures"
-        if(FileSearch.getDirectoryPaths(filePaths.PICTURES) != null){
+        if (FileSearch.getDirectoryPaths(filePaths.PICTURES) != null) {
             directories = FileSearch.getDirectoryPaths(filePaths.PICTURES);
         }
         ArrayList<String> directoryNames = new ArrayList<>();
-        for(int i = 0; i < directories.size(); i++){
+        for (int i = 0; i < directories.size(); i++) {
 
             int index = directories.get(i).lastIndexOf("/");
             String string = directories.get(i).substring(index);
@@ -125,13 +140,13 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private  void setupGridView(String selectedDirectory){
+    private void setupGridView(String selectedDirectory) {
         Log.d(TAG, "setupGridView: directory chosen: " + selectedDirectory);
         final ArrayList<String> imgURLs = FileSearch.getFilePaths(selectedDirectory);
 
         //set the grid column width
         int gridWidth = getResources().getDisplayMetrics().widthPixels;
-        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+        int imageWidth = gridWidth / NUM_GRID_COLUMNS;
         gridView.setColumnWidth(imageWidth);
 
         // use the grid adapter to adapter the image to gridview
@@ -153,7 +168,7 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private void setImage(String imgURL, ImageView image,String append){
+    private void setImage(String imgURL, ImageView image, String append) {
         Log.d(TAG, "setImage: setting image");
 
         ImageLoader imageLoader = ImageLoader.getInstance();
