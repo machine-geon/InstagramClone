@@ -72,7 +72,7 @@ public class FirebaseMethods {
             Log.d(TAG, "uploadNewPhoto: uploading NEW photo.");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            final StorageReference storageReference = mStorageReference
+            StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (count + 1));
 
             // convert image url to bitmap
@@ -122,7 +122,7 @@ public class FirebaseMethods {
             Log.d(TAG, "uploadNewPhoto: uploading new PROFILE photo.");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            final StorageReference storageReference = mStorageReference
+            StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
 
             // convert image url to bitmap
@@ -157,6 +157,7 @@ public class FirebaseMethods {
                     if (progress - 15 > mPhotoUploadProgress) {
                         Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                         mPhotoUploadProgress = progress;
+
                     }
 
                     Log.d(TAG, "onProgress: upload progress: " + progress + "% done");
@@ -165,8 +166,8 @@ public class FirebaseMethods {
 
         }
     }
-    
-    private void setProfilePhoto(String url){
+
+    private void setProfilePhoto(String url) {
         Log.d(TAG, "setProfilePhoto: setting new profile image: " + url);
 
         myRef.child(mContext.getString(R.string.dbname_user_account_settings))
@@ -175,13 +176,13 @@ public class FirebaseMethods {
                 .setValue(url);
     }
 
-    private String getTimeStamp(){
+    private String getTimeStamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd't'HH:mm:ss'Z'", Locale.KOREA);
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         return sdf.format(new Date());
     }
 
-    private void addPhotoToDatabase(String caption, String url){
+    private void addPhotoToDatabase(String caption, String url) {
         Log.d(TAG, "addPhotoToDatabase: adding photo to database.");
 
         String tags = StringManipulation.getTags(caption);
@@ -196,9 +197,10 @@ public class FirebaseMethods {
 
         //insert into database
         myRef.child(mContext.getString(R.string.dbname_user_photos))
-                .child(FirebaseAuth.getInstance().getCurrentUser()
-                        .getUid()).child(newPhotoKey).setValue(photo);
-        myRef.child(mContext.getString(R.string.dbname_photos)).child(newPhotoKey).setValue(photo);
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(newPhotoKey).setValue(photo);
+        myRef.child(mContext.getString(R.string.dbname_photos))
+                .child(newPhotoKey).setValue(photo);
 
     }
 

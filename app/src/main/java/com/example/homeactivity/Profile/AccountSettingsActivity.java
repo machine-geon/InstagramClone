@@ -31,7 +31,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 4 ;
 
     private Context mContext;
-    private SectionsStatePagerAdapter pagerAdapter;
+    public SectionsStatePagerAdapter pagerAdapter;
     private ViewPager mViewPager;
     private RelativeLayout mRelativeLayout;
 
