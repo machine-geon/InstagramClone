@@ -46,6 +46,9 @@ dependencies {
 
     //Firebase database
     implementation 'com.google.firebase:firebase-database:18.0.0'
+
+    //Firebase storage
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
 }
 
 //Firebase

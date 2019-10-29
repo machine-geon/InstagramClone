@@ -23,16 +23,16 @@ public class UniversalImageLoader {
     private static final int defaultImage = R.drawable.ic_android;
     private Context mContext;
 
-    public UniversalImageLoader(Context context){
+    public UniversalImageLoader(Context context) {
         mContext = context;
     }
 
     public ImageLoaderConfiguration getConfig(){
-
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .showImageOnLoading(defaultImage)
                 .showImageForEmptyUri(defaultImage)
                 .showImageOnFail(defaultImage)
+                .considerExifParams(true)
                 .cacheOnDisk(true).cacheInMemory(true)
                 .cacheOnDisk(true).resetViewBeforeLoading(true)
                 .imageScaleType(ImageScaleType.EXACTLY)
@@ -41,20 +41,22 @@ public class UniversalImageLoader {
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(mContext)
                 .defaultDisplayImageOptions(defaultOptions)
                 .memoryCache(new WeakMemoryCache())
-                .diskCacheSize(100*1024*1024).build();
+                .diskCacheSize(100 * 1024 * 1024).build();
 
-        return  configuration;
+        return configuration;
     }
 
     /**
-     * this method can be used to set images that are static. It can't be used if the images are
-     * being changed in the Fragment/Activity - OR if they are being set in a list or a grid
+     * this method can be sued to set images that are static. It can't be used if the images
+     * are being changed in the Fragment/Activity - OR if they are being set in a list or
+     * a grid
      * @param imgURL
      * @param image
      * @param mProgressBar
      * @param append
      */
-    public static void  setImage(String imgURL, ImageView image, final ProgressBar mProgressBar,String append){
+    public static void setImage(String imgURL, ImageView image, final ProgressBar mProgressBar, String append){
+
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(append + imgURL, image, new ImageLoadingListener() {
             @Override
