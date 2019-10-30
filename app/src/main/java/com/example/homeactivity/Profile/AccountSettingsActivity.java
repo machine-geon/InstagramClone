@@ -87,7 +87,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         pagerAdapter.addFragment(new SignOutFragment(),getString((R.string.sign_out_fragment)));         //fragment 1
     }
 
-    private void setViewPager(int fragmentNumber){
+    public void setViewPager(int fragmentNumber){
         mRelativeLayout.setVisibility(View.GONE);
         Log.d(TAG, "setViewPager: navigating to fragment #: "+ fragmentNumber);
         mViewPager.setAdapter(pagerAdapter);
