@@ -72,7 +72,7 @@ public class FirebaseMethods {
             Log.d(TAG, "uploadNewPhoto: uploading NEW photo.");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            StorageReference storageReference = mStorageReference
+            final StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (count + 1));
 
             // convert image url to bitmap
@@ -85,16 +85,26 @@ public class FirebaseMethods {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> firebaseUrl = taskSnapshot.getStorage().getDownloadUrl();
 
-                    Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
+                    // get the image Url of the file uploaded
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            // getting image uri and converting into string
+                            Uri downloadUrl = uri;
+                            String firebaseUrl = downloadUrl.toString();
+                            Log.d(TAG, "onFailure:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ firebaseUrl : " + firebaseUrl );
 
-                    //add the new photo to 'photo' node and 'user_photos' node
-                    addPhotoToDatabase(caption, firebaseUrl.toString());
+                            Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
 
-                    //navigate to the main feed so the user can see their photo
-                    Intent intent = new Intent(mContext, HomeActivity.class);
-                    mContext.startActivity(intent);
+                            //add the new photo to 'photo' node and 'user_photos' node
+                            addPhotoToDatabase(caption, firebaseUrl.toString());
+
+                            //navigate to the main feed so the user can see their photo
+                            Intent intent = new Intent(mContext, HomeActivity.class);
+                            mContext.startActivity(intent);
+                        }
+                    });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -122,7 +132,7 @@ public class FirebaseMethods {
             Log.d(TAG, "uploadNewPhoto: uploading new PROFILE photo.");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            StorageReference storageReference = mStorageReference
+            final StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
 
             // convert image url to bitmap
@@ -135,13 +145,24 @@ public class FirebaseMethods {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> firebaseUrl = taskSnapshot.getStorage().getDownloadUrl();
+                    {
 
-                    Toast.makeText(mContext, "photo upload success", Toast.LENGTH_SHORT).show();
+                        // get the image Url of the file uploaded
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // getting image uri and converting into string
+                                Uri downloadUrl = uri;
+                                String firebaseUrl = downloadUrl.toString();
+                                Log.d(TAG, "onFailure:firebaseUrl : " + firebaseUrl );
 
-                    //insert into 'user_account_settings' node
-                    setProfilePhoto(firebaseUrl.toString());
+                                Toast.makeText(mContext, "PROFILE photo upload success", Toast.LENGTH_SHORT).show();
 
+                                //insert into 'user_account_settings' node
+                                setProfilePhoto(firebaseUrl.toString());
+                            }
+                        });
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
