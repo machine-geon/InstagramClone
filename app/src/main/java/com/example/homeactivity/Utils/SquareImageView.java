@@ -5,16 +5,16 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-public class SqaureImageView extends AppCompatImageView {
-    public SqaureImageView(Context context) {
+public class SquareImageView extends AppCompatImageView {
+    public SquareImageView(Context context) {
         super(context);
     }
 
-    public SqaureImageView(Context context, AttributeSet attrs) {
+    public SquareImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SqaureImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
