@@ -21,6 +21,13 @@ import com.example.homeactivity.models.Photo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
  * Created by Mingeon on 04/11/2019.
  */
@@ -70,12 +77,49 @@ public class ViewPostFragment extends Fragment {
         }
 
         setupBotttomNavigationView();
+        setupWidgets();
 
         return view;
     }
 
+    private void setupWidgets() {
+        String timestampDiff = getTimestampDifference();
+        if (!timestampDiff.equals("0")) {
+            mTimestamp.setText(timestampDiff + " DAYS AGO");
+        } else {
+            mTimestamp.setText("TODAY");
+        }
+    }
+
+    /**
+     * Returns a string representing the number of days ago the post was made
+     *
+     * @return
+     */
+    private String getTimestampDifference() {
+        Log.d(TAG, "getTimestampDifference: ");
+
+        String difference = "";
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.KOREA);
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul")); //google "android list of timezones'
+        Date today = c.getTime();
+        sdf.format(today);
+        Date timestamp;
+        final String photoTimestamp = mPhoto.getDate_created();
+        try {
+            timestamp = sdf.parse(photoTimestamp);
+            difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24)));
+        } catch (ParseException e) {
+            Log.e(TAG, "getTimestampDifference: ParseException: " + e.getMessage());
+            difference = "0";
+        }
+        return difference;
+    }
+
     /**
      * retrieve the activity number from the incoming bundle from profileActivity interface
+     *
      * @return
      */
     private int getActivityNumFromBundle() {
@@ -91,6 +135,7 @@ public class ViewPostFragment extends Fragment {
 
     /**
      * retrieve the photo from the incoming bundle from profileActivity interface
+     *
      * @return
      */
     private Photo getPhotoFromBundle() {
@@ -110,7 +155,7 @@ public class ViewPostFragment extends Fragment {
     private void setupBotttomNavigationView() {
         Log.d(TAG, "setupBotttomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);
-        BottomNavigationViewHelper.enableNavigation(getActivity(), getActivity() ,bottomNavigationView);
+        BottomNavigationViewHelper.enableNavigation(getActivity(), getActivity(), bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(mActivityNumber);
         menuItem.setChecked(true);
