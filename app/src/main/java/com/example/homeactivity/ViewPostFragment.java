@@ -71,7 +71,7 @@ public class ViewPostFragment extends Fragment {
     private Photo mPhoto;
     private int mActivityNumber = 0;
     private String photoUsername;
-    private String photoUrl;
+    private String profilePhotoUrl;
     private UserAccountSettings mUserAccountSettings;
 
     @Nullable
@@ -111,7 +111,7 @@ public class ViewPostFragment extends Fragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
                 .child(getString(R.string.dbname_user_account_settings))
-                .child(getString(R.string.field_user_id))
+                .orderByChild(getString(R.string.field_user_id))
                 .equalTo(mPhoto.getUser_id());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -136,8 +136,11 @@ public class ViewPostFragment extends Fragment {
         } else {
             mTimestamp.setText("TODAY");
         }
-        UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfileImage, null, "");
-        mUsername.setText(mUserAccountSettings.getUsername());
+        try {
+            UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfileImage, null, "");
+            mUsername.setText(mUserAccountSettings.getUsername());
+        } catch (Exception e) {
+        }
     }
 
     /**
