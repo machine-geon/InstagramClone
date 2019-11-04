@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +16,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.homeactivity.Utils.BottomNavigationViewHelper;
+import com.example.homeactivity.Utils.FirebaseMethods;
+import com.example.homeactivity.Utils.GridImageAdapter;
 import com.example.homeactivity.Utils.SquareImageView;
 import com.example.homeactivity.Utils.UniversalImageLoader;
 import com.example.homeactivity.models.Photo;
+import com.example.homeactivity.models.UserAccountSettings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -41,6 +54,13 @@ public class ViewPostFragment extends Fragment {
         setArguments(new Bundle());
     }
 
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
+
     //widgets
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
@@ -50,6 +70,9 @@ public class ViewPostFragment extends Fragment {
     //vars
     private Photo mPhoto;
     private int mActivityNumber = 0;
+    private String photoUsername;
+    private String photoUrl;
+    private UserAccountSettings mUserAccountSettings;
 
     @Nullable
     @Override
@@ -76,10 +99,34 @@ public class ViewPostFragment extends Fragment {
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage());
         }
 
+        setupFirebaseAuth();
         setupBotttomNavigationView();
-        setupWidgets();
+        getPhotoDetails();
+        //setupWidgets();
 
         return view;
+    }
+
+    private void getPhotoDetails() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.dbname_user_account_settings))
+                .child(getString(R.string.field_user_id))
+                .equalTo(mPhoto.getUser_id());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    mUserAccountSettings = singleSnapshot.getValue(UserAccountSettings.class);
+                }
+                setupWidgets();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
+            }
+        });
     }
 
     private void setupWidgets() {
@@ -89,6 +136,8 @@ public class ViewPostFragment extends Fragment {
         } else {
             mTimestamp.setText("TODAY");
         }
+        UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfileImage, null, "");
+        mUsername.setText(mUserAccountSettings.getUsername());
     }
 
     /**
@@ -160,4 +209,51 @@ public class ViewPostFragment extends Fragment {
         MenuItem menuItem = menu.getItem(mActivityNumber);
         menuItem.setChecked(true);
     }
+
+           /*
+============================================= Firebase =================================================
+ */
+
+    /**
+     * Setup the firebase auth object
+     */
+    private void setupFirebaseAuth() {
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged: signed_in:" + user.getUid());
+                } else {
+                    // User is singed out
+                    Log.d(TAG, "onAuthStateChanged: singed_out");
+                }
+                //...
+            }
+        };
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
 }
