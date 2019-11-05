@@ -1,6 +1,7 @@
 package com.example.homeactivity.Utils;
 
 import android.util.Log;
+import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 
 /**
@@ -19,5 +20,12 @@ public class Heart {
     
     public void toggleLike(){
         Log.d(TAG, "toggleLike: toggling heart.");
+
+        AnimationSet animationSet = new AnimationSet();
+
+        if (){
+
+        }
+
     }
 }

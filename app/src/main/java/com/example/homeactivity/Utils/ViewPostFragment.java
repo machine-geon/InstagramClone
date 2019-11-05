@@ -86,7 +86,7 @@ public class ViewPostFragment extends Fragment {
         mHeartWhite = (ImageView) view.findViewById(R.id.image_heart);
         mProfileImage = (ImageView) view.findViewById(R.id.profile_photo);
 
-        mGestureDetector = new GestureDetector(getActivity()), new GestureListner);
+        mGestureDetector = new GestureDetector(getActivity(), new GestureListner());
 
         try {
             mPhoto = getPhotoFromBundle();
