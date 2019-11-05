@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.homeactivity.R;
-import com.example.homeactivity.ViewPostFragment;
 import com.example.homeactivity.models.Photo;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener{

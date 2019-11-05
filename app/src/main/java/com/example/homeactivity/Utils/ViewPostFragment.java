@@ -1,13 +1,14 @@
-package com.example.homeactivity;
+package com.example.homeactivity.Utils;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.homeactivity.Utils.BottomNavigationViewHelper;
-import com.example.homeactivity.Utils.FirebaseMethods;
-import com.example.homeactivity.Utils.GridImageAdapter;
-import com.example.homeactivity.Utils.SquareImageView;
-import com.example.homeactivity.Utils.UniversalImageLoader;
+import com.example.homeactivity.R;
 import com.example.homeactivity.models.Photo;
 import com.example.homeactivity.models.UserAccountSettings;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +31,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -73,6 +68,7 @@ public class ViewPostFragment extends Fragment {
     private String photoUsername;
     private String profilePhotoUrl;
     private UserAccountSettings mUserAccountSettings;
+    private GestureDetector mGestureDetector;
 
     @Nullable
     @Override
@@ -90,6 +86,8 @@ public class ViewPostFragment extends Fragment {
         mHeartWhite = (ImageView) view.findViewById(R.id.image_heart);
         mProfileImage = (ImageView) view.findViewById(R.id.profile_photo);
 
+        mGestureDetector = new GestureDetector(getActivity()), new GestureListner);
+
         try {
             mPhoto = getPhotoFromBundle();
             UniversalImageLoader.setImage(mPhoto.getImage_path(), mPostImage, null, "");
@@ -104,7 +102,36 @@ public class ViewPostFragment extends Fragment {
         getPhotoDetails();
         //setupWidgets();
 
+        testToggle();
+
         return view;
+    }
+
+    private void testToggle(){
+        mHeartRed.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+        mHeartWhite.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+    }
+
+    public class GestureListner extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            return super.onDoubleTap(e);
+        }
     }
 
     private void getPhotoDetails() {
