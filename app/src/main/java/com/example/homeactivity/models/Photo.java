@@ -33,13 +33,9 @@ public class Photo implements Parcelable {
         this.likes = likes;
     }
 
-    protected Photo(Parcel in) {
-        caption = in.readString();
-        date_created = in.readString();
-        image_path = in.readString();
-        photo_id = in.readString();
-        user_id = in.readString();
-        tags = in.readString();
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -52,9 +48,13 @@ public class Photo implements Parcelable {
         dest.writeString(tags);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    protected Photo(Parcel in) {
+        caption = in.readString();
+        date_created = in.readString();
+        image_path = in.readString();
+        photo_id = in.readString();
+        user_id = in.readString();
+        tags = in.readString();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
@@ -137,4 +137,5 @@ public class Photo implements Parcelable {
                 ", likes=" + likes +
                 '}';
     }
+
 }

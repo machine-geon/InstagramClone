@@ -14,9 +14,10 @@ import android.widget.ImageView;
  */
 
 public class Heart {
+
     private static final String TAG = "Heart";
 
-    private static final DecelerateInterpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
+    private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
 
     public ImageView heartWhite, heartRed;
@@ -26,7 +27,7 @@ public class Heart {
         this.heartRed = heartRed;
     }
 
-    public void toggleLike(){
+    public void toggleLike() {
         Log.d(TAG, "toggleLike: toggling heart.");
 
         AnimatorSet animationSet =  new AnimatorSet();
@@ -58,11 +59,11 @@ public class Heart {
 
             ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(heartRed, "scaleY", 0.1f, 1f);
             scaleDownY.setDuration(300);
-            scaleDownY.setInterpolator(DECELERATE_INTERPOLATOR);
+            scaleDownY.setInterpolator(DECCELERATE_INTERPOLATOR);
 
             ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(heartRed, "scaleX", 0.1f, 1f);
             scaleDownX.setDuration(300);
-            scaleDownX.setInterpolator(DECELERATE_INTERPOLATOR);
+            scaleDownX.setInterpolator(DECCELERATE_INTERPOLATOR);
 
             heartRed.setVisibility(View.VISIBLE);
             heartWhite.setVisibility(View.GONE);
