@@ -69,6 +69,7 @@ public class ViewPostFragment extends Fragment {
     private String profilePhotoUrl;
     private UserAccountSettings mUserAccountSettings;
     private GestureDetector mGestureDetector;
+    private Heart mHeart;
 
     @Nullable
     @Override
@@ -86,7 +87,10 @@ public class ViewPostFragment extends Fragment {
         mHeartWhite = (ImageView) view.findViewById(R.id.image_heart);
         mProfileImage = (ImageView) view.findViewById(R.id.profile_photo);
 
-        mGestureDetector = new GestureDetector(getActivity(), new GestureListner());
+        mHeartRed.setVisibility(View.GONE);
+        mHeartWhite.setVisibility(View.VISIBLE);
+        mHeart = new Heart(mHeartWhite, mHeartRed);
+        mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
 
         try {
             mPhoto = getPhotoFromBundle();
@@ -107,30 +111,42 @@ public class ViewPostFragment extends Fragment {
         return view;
     }
 
-    private void testToggle(){
+    private void testToggle() {
         mHeartRed.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "onTouch: red heart touch detected.");
                 return mGestureDetector.onTouchEvent(event);
             }
         });
         mHeartWhite.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "onTouch: white heart touch detected.");
                 return mGestureDetector.onTouchEvent(event);
             }
         });
     }
 
-    public class GestureListner extends GestureDetector.SimpleOnGestureListener{
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
         @Override
         public boolean onDown(MotionEvent e) {
-            return super.onDown(e);
+            Log.d(TAG, "onDoubleTap: on down");
+
+            mHeart.toggleLike();
+
+            return true;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            return super.onDoubleTap(e);
+
+            Log.d(TAG, "onDoubleTap: double tap detected.");
+
+            mHeart.toggleLike();
+
+            return true;
         }
     }
 
