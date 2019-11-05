@@ -1,5 +1,6 @@
 package com.example.homeactivity.Utils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.StringBuilderPrinter;
@@ -47,6 +48,12 @@ public class ViewPostFragment extends Fragment {
 
     private static final String TAG = "ViewPostFragment";
 
+    public interface OnCommentThreadSelectedListner {
+        void onCommentThreadSelectedListener(Photo photo);
+    }
+
+    OnCommentThreadSelectedListner mOnCommentThreadSelectedListner;
+
     public ViewPostFragment() {
         super();
         setArguments(new Bundle());
@@ -63,7 +70,7 @@ public class ViewPostFragment extends Fragment {
     private SquareImageView mPostImage;
     private BottomNavigationViewEx bottomNavigationView;
     private TextView mBackLabel, mCaption, mUsername, mTimestamp, mLikes;
-    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage;
+    private ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite, mProfileImage, mComment;
 
     //vars
     private Photo mPhoto;
@@ -93,6 +100,7 @@ public class ViewPostFragment extends Fragment {
         mHeartWhite = (ImageView) view.findViewById(R.id.image_heart);
         mProfileImage = (ImageView) view.findViewById(R.id.profile_photo);
         mLikes = (TextView) view.findViewById(R.id.image_likes);
+        mComment = (ImageView) view.findViewById(R.id.speech_bubble);
 
         mHeart = new Heart(mHeartWhite, mHeartRed);
         mGestureDetector = new GestureDetector(getActivity(), new GestureListener());
@@ -112,6 +120,16 @@ public class ViewPostFragment extends Fragment {
         setupBotttomNavigationView();
 
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mOnCommentThreadSelectedListner = (OnCommentThreadSelectedListner) getActivity();
+        } catch (ClassCastException e) {
+            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+        }
     }
 
     private void getLikesString() {
@@ -146,27 +164,27 @@ public class ViewPostFragment extends Fragment {
 
                             String[] splitUsers = mUsers.toString().split(",");
 
-                            if(mUsers.toString().contains(mUserAccountSettings.getUsername() + ",")){//mitch, mitchell.tabian
+                            if (mUsers.toString().contains(mUserAccountSettings.getUsername() + ",")) {//mitch, mitchell.tabian
                                 mLikedByCurrentUser = true;
-                            }else{
+                            } else {
                                 mLikedByCurrentUser = false;
                             }
 
                             int length = splitUsers.length;
                             if (length == 1) {
-                                mLikesString = "좋아하는 사람 " + splitUsers[0]+ "님";
+                                mLikesString = "좋아하는 사람 " + splitUsers[0] + "님";
                             } else if (length == 2) {
                                 mLikesString = "좋아하는 사람 " + splitUsers[0]
-                                        + "님," + splitUsers[1]+ "님";
+                                        + "님," + splitUsers[1] + "님";
                             } else if (length == 3) {
                                 mLikesString = "좋아하는 사람 " + splitUsers[0]
                                         + "님," + splitUsers[1]
-                                        + "님," + splitUsers[2]+ "님";
+                                        + "님," + splitUsers[2] + "님";
                             } else if (length == 4) {
                                 mLikesString = "좋아하는 사람 " + splitUsers[0]
                                         + "님," + splitUsers[1]
                                         + "님," + splitUsers[2]
-                                        + "님," + splitUsers[3]+ "님";
+                                        + "님," + splitUsers[3] + "님";
                             } else if (length > 4) {
                                 mLikesString = "좋아하는 사람 " + splitUsers[0]
                                         + "님," + splitUsers[1]
@@ -217,14 +235,14 @@ public class ViewPostFragment extends Fragment {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
                         String keyID = singleSnapshot.getKey();
 
                         //case1: Then user already liked the photo
-                        if(mLikedByCurrentUser &&
+                        if (mLikedByCurrentUser &&
                                 singleSnapshot.getValue(Like.class).getUser_id()
-                                        .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                        .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                             myRef.child(getString(R.string.dbname_photos))
                                     .child(mPhoto.getPhoto_id())
@@ -243,13 +261,13 @@ public class ViewPostFragment extends Fragment {
                             getLikesString();
                         }
                         //case2: The user has not liked the photo
-                        else if(!mLikedByCurrentUser){
+                        else if (!mLikedByCurrentUser) {
                             //add new like
                             addNewLike();
                             break;
                         }
                     }
-                    if(!dataSnapshot.exists()){
+                    if (!dataSnapshot.exists()) {
                         //add new like
                         addNewLike();
                     }
@@ -324,6 +342,22 @@ public class ViewPostFragment extends Fragment {
         mUsername.setText(mUserAccountSettings.getUsername());
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back.");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        mComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back.");
+
+            }
+        });
 
         if (mLikedByCurrentUser) {
             mHeartWhite.setVisibility(View.GONE);

@@ -14,9 +14,16 @@ import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.ViewPostFragment;
 import com.example.homeactivity.models.Photo;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener{
+public class ProfileActivity extends AppCompatActivity implements
+        ProfileFragment.OnGridImageSelectedListener,
+        ViewPostFragment.OnCommentThreadSelectedListner {
 
-    private static final String TAG = "ProfileActivity" ;
+    private static final String TAG = "ProfileActivity";
+
+    @Override
+    public void onCommentThreadSelectedListener(Photo photo) {
+
+    }
 
     @Override
     public void onGridImageSelected(Photo photo, int activityNumber) {
@@ -35,10 +42,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 
     }
 
-    private static final int ACTIVITY_NUM = 4 ;
+    private static final int ACTIVITY_NUM = 4;
     private static final int NUM_GRID_COLUMNS = 3;
 
-    private Context mContext = ProfileActivity.this ;
+    private Context mContext = ProfileActivity.this;
 
     private ProgressBar mProgressBar;
     private ImageView profilePhoto;
@@ -53,8 +60,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 
     }
 
-    private void init(){
-        Log.d(TAG, "init: inflating" + getString(R.string.profile_fragment) );
+    private void init() {
+        Log.d(TAG, "init: inflating" + getString(R.string.profile_fragment));
 
         ProfileFragment fragment = new ProfileFragment();
         FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
