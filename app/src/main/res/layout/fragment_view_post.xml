@@ -18,7 +18,7 @@
         android:id="@+id/relLayout2"
         android:layout_below="@+id/relLayout1">
 
-        <include layout="@layout/layout_view_post"/>
+        <include layout="@layout/layout_view_post" />
 
     </RelativeLayout>
 

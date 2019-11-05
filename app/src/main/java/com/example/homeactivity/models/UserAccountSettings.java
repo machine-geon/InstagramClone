@@ -1,5 +1,9 @@
 package com.example.homeactivity.models;
 
+import android.util.Log;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 /**
  * Created by Mingeon on 23/10/2019.
  */
