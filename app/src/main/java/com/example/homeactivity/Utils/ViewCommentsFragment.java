@@ -148,6 +148,14 @@ public class ViewCommentsFragment extends Fragment {
                 }
             }
         });
+
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: onClick: navigating back.");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 
     private void closeKeyboard() {
@@ -238,6 +246,17 @@ public class ViewCommentsFragment extends Fragment {
             }
         };
 
+        if(mPhoto.getComments().size() == 0){
+            mComments.clear();
+            Comment firstComment = new Comment();
+            firstComment.setComment(mPhoto.getCaption());
+            firstComment.setUser_id(mPhoto.getUser_id());
+            firstComment.setDate_created(mPhoto.getDate_created());
+            mComments.add(firstComment);
+            mPhoto.setComments(mComments);
+            setupWidgets();
+        }
+
         myRef.child(mContext.getString(R.string.dbname_photos))
                 .child(mPhoto.getPhoto_id())
                 .child(mContext.getString(R.string.field_comments))
@@ -245,8 +264,8 @@ public class ViewCommentsFragment extends Fragment {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         Query query = myRef
-                                .child(getString(R.string.dbname_photos))
-                                .orderByChild(getString(R.string.field_photo_id))
+                                .child(mContext.getString(R.string.dbname_photos))
+                                .orderByChild(mContext.getString(R.string.field_photo_id))
                                 .equalTo(mPhoto.getPhoto_id());
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -256,12 +275,12 @@ public class ViewCommentsFragment extends Fragment {
                                     Photo photo = new Photo();
                                     Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
-                                    photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
-                                    photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
-                                    photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
-                                    photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                                    photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
-                                    photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+                                    photo.setCaption(objectMap.get(mContext.getString(R.string.field_caption)).toString());
+                                    photo.setTags(objectMap.get(mContext.getString(R.string.field_tags)).toString());
+                                    photo.setPhoto_id(objectMap.get(mContext.getString(R.string.field_photo_id)).toString());
+                                    photo.setUser_id(objectMap.get(mContext.getString(R.string.field_user_id)).toString());
+                                    photo.setDate_created(objectMap.get(mContext.getString(R.string.field_date_created)).toString());
+                                    photo.setImage_path(objectMap.get(mContext.getString(R.string.field_image_path)).toString());
 
                                     List<Comment> commentList = new ArrayList<Comment>();
 
@@ -273,7 +292,7 @@ public class ViewCommentsFragment extends Fragment {
 
                                     mComments.add(firstComment);
 
-                                    for (DataSnapshot dSnapshot : singleSnapshot.child(getString(R.string.field_comments)).getChildren()) {
+                                    for (DataSnapshot dSnapshot : singleSnapshot.child(mContext.getString(R.string.field_comments)).getChildren()) {
                                         Comment comment = new Comment();
                                         comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
                                         comment.setComment(dSnapshot.getValue(Comment.class).getComment());

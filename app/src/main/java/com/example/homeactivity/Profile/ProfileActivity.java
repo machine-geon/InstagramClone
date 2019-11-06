@@ -44,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity implements
         Bundle args = new Bundle();
         args.putParcelable(getString(R.string.photo), photo);
         args.putInt(getString(R.string.activity_number), activityNumber);
+
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
