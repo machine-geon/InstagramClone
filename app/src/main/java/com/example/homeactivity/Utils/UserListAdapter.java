@@ -82,9 +82,10 @@ public class UserListAdapter extends ArrayAdapter<User> {
                 .equalTo(getItem(position).getUser_id());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
-                    Log.d(TAG, "onDataChange: found user: " + singleSnapshot.getValue(UserAccountSettings.class).toString());
+                    Log.d(TAG, "onDataChange: found user: " +
+                            singleSnapshot.getValue(UserAccountSettings.class).toString());
 
                     ImageLoader imageLoader = ImageLoader.getInstance();
 
