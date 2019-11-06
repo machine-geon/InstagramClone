@@ -134,9 +134,6 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void setupBottomNavigationView() {
-    }
-
     @Override
     public void onAttach(@NonNull Activity activity) {
         try {
@@ -329,8 +326,8 @@ public class ProfileFragment extends Fragment {
     /**
      * BottomNavigationView setup
      */
-    private void setupBotttomNavigationView() {
-        Log.d(TAG, "setupBotttomNavigationView: setting up BottomNavigationView");
+    private void setupBottomNavigationView() {
+        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationView);
         BottomNavigationViewHelper.enableNavigation(mContext, getActivity(), bottomNavigationView);
         Menu menu = bottomNavigationView.getMenu();
