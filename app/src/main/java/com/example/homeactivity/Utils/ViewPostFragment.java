@@ -343,13 +343,13 @@ public class ViewPostFragment extends Fragment {
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
 
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating back");
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: navigating back");
+//                getActivity().getSupportFragmentManager().popBackStack();
+//            }
+//        });
 
         mComment.setOnClickListener(new View.OnClickListener() {
             @Override
