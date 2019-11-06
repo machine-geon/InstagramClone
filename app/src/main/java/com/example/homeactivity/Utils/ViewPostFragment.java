@@ -94,6 +94,7 @@ public class ViewPostFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_post, container, false);
+
         mPostImage = (SquareImageView) view.findViewById(R.id.post_image);
         bottomNavigationView = (BottomNavigationViewEx) view.findViewById(R.id.bottomNavViewBar);
         mBackArrow = (ImageView) view.findViewById(R.id.backArrow);
@@ -118,7 +119,7 @@ public class ViewPostFragment extends Fragment {
         return view;
     }
 
-    private void init(){
+    private void init() {
         try {
             //mPhoto = getPhotoFromBundle();
             UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
@@ -132,7 +133,7 @@ public class ViewPostFragment extends Fragment {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         Photo newPhoto = new Photo();
                         Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
@@ -145,7 +146,7 @@ public class ViewPostFragment extends Fragment {
 
                         List<Comment> commentsList = new ArrayList<Comment>();
                         for (DataSnapshot dSnapshot : singleSnapshot
-                                .child(getString(R.string.field_comments)).getChildren()){
+                                .child(getString(R.string.field_comments)).getChildren()) {
                             Comment comment = new Comment();
                             comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
                             comment.setComment(dSnapshot.getValue(Comment.class).getComment());
@@ -179,7 +180,7 @@ public class ViewPostFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(isAdded()){
+        if (isAdded()) {
             init();
         }
     }
@@ -279,7 +280,7 @@ public class ViewPostFragment extends Fragment {
 
     }
 
-    private void getmCurrentUser(){
+    private void getmCurrentUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
                 .child(getString(R.string.dbname_users))
@@ -427,9 +428,9 @@ public class ViewPostFragment extends Fragment {
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
 
-        if(mPhoto.getComments().size() > 0){
-            mComments.setText("댓글 " + mPhoto.getComments().size() + "개 모두 보기" );
-        }else {
+        if (mPhoto.getComments().size() > 0) {
+            mComments.setText("댓글 " + mPhoto.getComments().size() + "개 모두 보기");
+        } else {
             mComments.setText("");
         }
 
@@ -441,14 +442,18 @@ public class ViewPostFragment extends Fragment {
                 mOnCommentThreadSelectedListner.onCommentThreadSelectedListener(mPhoto);
             }
         });
+        try {
+            mBackArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: navigating back");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        }catch (NullPointerException e){
+            Log.e(TAG, "setupWidgets: NullPointerException: " + e.getMessage() );
+        }
 
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "onClick: navigating back");
-//                getActivity().getSupportFragmentManager().popBackStack();
-//            }
-//        });
 
         mComment.setOnClickListener(new View.OnClickListener() {
             @Override
