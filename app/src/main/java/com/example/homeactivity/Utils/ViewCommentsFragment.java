@@ -98,32 +98,6 @@ public class ViewCommentsFragment extends Fragment {
             Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage());
         }
 
-        Comment firstComment = new Comment();
-        firstComment.setComment(mPhoto.getCaption());
-        firstComment.setUser_id(mPhoto.getUser_id());
-        firstComment.setDate_created(mPhoto.getDate_created());
-
-        mComments.add(firstComment);
-        CommentListAdapter adapter = new CommentListAdapter(getActivity(),
-                R.layout.layout_comment, mComments);
-        mListView.setAdapter(adapter);
-
-        mCheckMark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!mComment.getText().toString().equals("")) {
-                    Log.d(TAG, "onClick: attempting to submit new comment.");
-                    addNewComment(mComment.getText().toString());
-
-                    mComment.setText("");
-                    closeKeyboard();
-                } else {
-                    Toast.makeText(getActivity(), "내용이 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         return view;
     }
 
