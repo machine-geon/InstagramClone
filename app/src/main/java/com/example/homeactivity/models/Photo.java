@@ -18,12 +18,14 @@ public class Photo implements Parcelable {
     private String user_id;
     private String tags;
     private List<Like> likes;
+    private List<Comment> comments;
 
     public Photo(){
 
     }
 
-    public Photo(String caption, String date_created, String image_path, String photo_id, String user_id, String tags, List<Like> likes) {
+    public Photo(String caption, String date_created, String image_path, String photo_id,
+                 String user_id, String tags, List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.date_created = date_created;
         this.image_path = image_path;
@@ -31,11 +33,16 @@ public class Photo implements Parcelable {
         this.user_id = user_id;
         this.tags = tags;
         this.likes = likes;
+        this.comments = comments;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    protected Photo(Parcel in) {
+        caption = in.readString();
+        date_created = in.readString();
+        image_path = in.readString();
+        photo_id = in.readString();
+        user_id = in.readString();
+        tags = in.readString();
     }
 
     @Override
@@ -48,13 +55,9 @@ public class Photo implements Parcelable {
         dest.writeString(tags);
     }
 
-    protected Photo(Parcel in) {
-        caption = in.readString();
-        date_created = in.readString();
-        image_path = in.readString();
-        photo_id = in.readString();
-        user_id = in.readString();
-        tags = in.readString();
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
@@ -68,6 +71,18 @@ public class Photo implements Parcelable {
             return new Photo[size];
         }
     };
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public static Creator<Photo> getCREATOR() {
+        return CREATOR;
+    }
 
     public String getCaption() {
         return caption;
