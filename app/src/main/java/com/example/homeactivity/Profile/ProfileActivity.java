@@ -20,7 +20,8 @@ import com.example.homeactivity.models.Photo;
 
 public class ProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnGridImageSelectedListener,
-        ViewPostFragment.OnCommentThreadSelectedListner {
+        ViewPostFragment.OnCommentThreadSelectedListner,
+        ViewProfileFragment.OnGridImageSelectedListener{
 
     private static final String TAG = "ProfileActivity";
 
