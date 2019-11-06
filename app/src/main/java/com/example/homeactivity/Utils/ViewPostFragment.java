@@ -346,7 +346,7 @@ public class ViewPostFragment extends Fragment {
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating back.");
+                Log.d(TAG, "onClick: navigating back");
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
