@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.homeactivity.Login.LoginActivity;
@@ -16,6 +17,9 @@ import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.BottomNavigationViewHelper;
 import com.example.homeactivity.Utils.SectionPagerAdapter;
 import com.example.homeactivity.Utils.UniversalImageLoader;
+import com.example.homeactivity.Utils.ViewCommentsFragment;
+import com.example.homeactivity.models.Photo;
+import com.example.homeactivity.models.UserAccountSettings;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,6 +49,22 @@ public class HomeActivity extends AppCompatActivity {
         initImageLoader();
         setupBotttomNavigationView();
         setupViewPager();
+
+    }
+    
+    public void onCommentThreadSelected(Photo photo, UserAccountSettings settings){
+        Log.d(TAG, "onCommentThreadSelected: selected a comment thread.");
+
+        ViewCommentsFragment fragment = new ViewCommentsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.bundle_photo), photo);
+        args.putParcelable(getString(R.string.bundle_user_account_settings), settings);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.view_comments_fragment));
+        transaction.commit();
 
     }
 
