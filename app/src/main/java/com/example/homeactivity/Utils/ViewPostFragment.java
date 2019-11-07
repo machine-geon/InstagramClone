@@ -495,7 +495,7 @@ public class ViewPostFragment extends Fragment {
      * @return
      */
     private String getTimestampDifference() {
-        Log.d(TAG, "getTimestampDifference: ");
+        Log.d(TAG, "getTimestampDifference: getting timestamp difference.");
 
         String difference = "";
         Calendar c = Calendar.getInstance();
