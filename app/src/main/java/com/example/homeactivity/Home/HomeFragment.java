@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.snapshot.Index;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,9 +39,12 @@ public class HomeFragment extends Fragment {
 
     //vars
     private ArrayList<Photo> mPhotos;
+    private ArrayList<Photo> mPaginatedPhotos;
     private ArrayList<String> mFollowing;
     private ListView mListView;
     private MainfeedListAdapter mAdapter;
+    private int mResults;
+
 
     @Nullable
     @Override
@@ -120,7 +124,7 @@ public class HomeFragment extends Fragment {
                         photo.setComments(comments);
                         mPhotos.add(photo);
                     }
-                    if (count >= mFollowing.size() -1){
+                    if (count >= mFollowing.size() - 1) {
                         //display our photos
                         displayPhotos();
                     }
@@ -134,17 +138,65 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void displayPhotos(){
-        if (mPhotos != null){
-            Collections.sort(mPhotos, new Comparator<Photo>() {
-                @Override
-                public int compare(Photo o1, Photo o2) {
-                    return o2.getDate_created().compareTo(o1.getDate_created());
-                }
-            });
+    private void displayPhotos() {
+        mPaginatedPhotos = new ArrayList<>();
+        if (mPhotos != null) {
+            try {
+                Collections.sort(mPhotos, new Comparator<Photo>() {
+                    @Override
+                    public int compare(Photo o1, Photo o2) {
+                        return o2.getDate_created().compareTo(o1.getDate_created());
+                    }
+                });
 
-            mAdapter = new MainfeedListAdapter(getActivity(), R.layout.layout_mainfeed_listitem, mPhotos);
-            mListView.setAdapter(mAdapter);
+                int iterations = mPhotos.size();
+
+                if (iterations > 10) {
+                    iterations = 10;
+                }
+
+                mResults = 10;
+                for (int i = 0; i < iterations; i++) {
+                    mPaginatedPhotos.add(mPhotos.get(i));
+                }
+
+                mAdapter = new MainfeedListAdapter(getActivity(), R.layout.layout_mainfeed_listitem, mPaginatedPhotos);
+                mListView.setAdapter(mAdapter);
+
+            } catch (NullPointerException e) {
+                Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
+            }
+        }
+    }
+
+    public void displayMorePhoto() {
+        Log.d(TAG, "displayMorePhoto: displaying more photos.");
+
+        try {
+            if(mPhotos.size() > mResults && mPhotos.size() > 0){
+
+                int iterations;
+                if(mPhotos.size() > (mResults + 10)){
+                    Log.d(TAG, "displayMorePhoto: there are greater than 10 more photos.");
+                    iterations = 10;
+                }else{
+                    Log.d(TAG, "displayMorePhoto: there is less than 10 more photos.");
+                    iterations = mPhotos.size() - mResults;
+                }
+
+                //add the new photos to the paginated results
+                for (int i = mResults; i < mResults + iterations; i++){
+                    mPaginatedPhotos.add(mPhotos.get(i));
+                }
+                mResults = mResults + iterations;
+                mAdapter.notifyDataSetChanged();
+            }
+        } catch (NullPointerException e) {
+            Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
         }
     }
 }
