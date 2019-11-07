@@ -157,7 +157,7 @@ public class ViewPostFragment extends Fragment {
 
                         mPhoto = newPhoto;
 
-                        getmCurrentUser();
+                        getCurrentUser();
                         getPhotoDetails();
                         //getLikesString();
 
@@ -198,6 +198,7 @@ public class ViewPostFragment extends Fragment {
     private void getLikesString() {
         Log.d(TAG, "getLikesString: getting likes string");
 
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
                 .child(getString(R.string.dbname_photos))
@@ -205,9 +206,9 @@ public class ViewPostFragment extends Fragment {
                 .child(getString(R.string.field_likes));
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 mUsers = new StringBuilder();
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                     Query query = reference
@@ -216,8 +217,8 @@ public class ViewPostFragment extends Fragment {
                             .equalTo(singleSnapshot.getValue(Like.class).getUser_id());
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                                 Log.d(TAG, "onDataChange: found like: " +
                                         singleSnapshot.getValue(User.class).getUsername());
 
@@ -227,9 +228,9 @@ public class ViewPostFragment extends Fragment {
 
                             String[] splitUsers = mUsers.toString().split(",");
 
-                            if (mUsers.toString().contains(mCurrentUser.getUsername() + ",")) {//mitch, mitchell.tabian
+                            if(mUsers.toString().contains(mCurrentUser.getUsername() + ",")){//mitch, mitchell.tabian
                                 mLikedByCurrentUser = true;
-                            } else {
+                            }else{
                                 mLikedByCurrentUser = false;
                             }
 
@@ -265,7 +266,7 @@ public class ViewPostFragment extends Fragment {
                         }
                     });
                 }
-                if (!dataSnapshot.exists()) {
+                if(!dataSnapshot.exists()){
                     mLikesString = "";
                     mLikedByCurrentUser = false;
                     setupWidgets();
@@ -273,14 +274,14 @@ public class ViewPostFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
     }
 
-    private void getmCurrentUser() {
+    private void getCurrentUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
                 .child(getString(R.string.dbname_users))
