@@ -114,7 +114,7 @@
                 android:id="@+id/image_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Liked by Mitch, Tom, Mohammed and 30 others"
+                android:text="좋아하는 사람 김민건,최소윤,김종규 외 3명"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_likes"
                 android:layout_marginTop="15dp"
-                android:text="mitch.tabian moutains #earthporn #mountains"
+                android:text="프로젝트중 #집에보내줘 #야근?"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_caption"
                 android:layout_marginTop="15dp"
-                android:text="View all 3 comments"
+                android:text="댓글 3개 모두 보기"
                 android:textColor="@color/grey"
                 android:textSize="18sp" />
 
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_comments_link"
                 android:layout_marginTop="15dp"
-                android:text="3 DAYS AGO"
+                android:text="3일 전"
                 android:textColor="@color/grey"
                 android:textSize="18sp" />
 
