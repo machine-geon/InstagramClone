@@ -68,8 +68,8 @@ public class ShareActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsBottom);
         tabLayout.setupWithViewPager(mViewPager);
 
-        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
-        tabLayout.getTabAt(1).setText(R.string.photo);
+        tabLayout.getTabAt(1).setText(getString(R.string.gallery));
+        tabLayout.getTabAt(0).setText(R.string.photo);
 
     }
 
