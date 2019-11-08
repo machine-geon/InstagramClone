@@ -18,7 +18,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.homeactivity.Login.LoginActivity;
 import com.example.homeactivity.R;
 import com.example.homeactivity.Utils.BottomNavigationViewHelper;
-import com.example.homeactivity.Utils.MainfeedListAdapter;
 import com.example.homeactivity.Utils.SectionPagerAdapter;
 import com.example.homeactivity.Utils.UniversalImageLoader;
 import com.example.homeactivity.Utils.ViewCommentsFragment;
@@ -30,18 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class HomeActivity extends AppCompatActivity
-        implements MainfeedListAdapter.OnLoadMoreItemsListener{
-
-    @Override
-    public void onLoadMoreItems() {
-        Log.d(TAG, "onLoadMoreItems: displaying more photos.");
-        HomeFragment fragment = (HomeFragment)getSupportFragmentManager()
-                .findFragmentByTag("android: switcher: " + R.id.viewpager_container + ":" + mViewPager.getCurrentItem());
-        if (fragment != null){
-            fragment.displayMorePhoto();
-        }
-    }
+public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
     private static final int ACTIVITY_NUM = 0 ;
@@ -75,7 +63,7 @@ public class HomeActivity extends AppCompatActivity
         setupViewPager();
 
     }
-    
+
     public void onCommentThreadSelected(Photo photo, String callingActivity){
         Log.d(TAG, "onCommentThreadSelected: selected a comment thread.");
 
@@ -86,7 +74,7 @@ public class HomeActivity extends AppCompatActivity
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment, "ViewCommentsFragment");
+        transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(getString(R.string.view_comments_fragment));
         transaction.commit();
 
@@ -206,5 +194,4 @@ public class HomeActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
 }
